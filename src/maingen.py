@@ -17,6 +17,7 @@ def reproduction(a,b):
         ret.pcs[pos]=random.randint(0,high=27)
         ret.dely[pos] = random.randint(0,high=2)
     prob = random.random()
+    return ret
     
 
 
