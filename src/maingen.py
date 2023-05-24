@@ -17,6 +17,7 @@ def reproduction(a,b):
         ret.pcs[pos]=random.randint(0,high=27)
         ret.dely[pos] = random.randint(0,high=2)
     prob = random.random()
+    
 
 
 harmy = [1.0,0.0,0.25,0.5,0.5,1.0,0.0,1.0,0.5,0.5,0.25,0.0]
@@ -72,7 +73,10 @@ while true:
     sumfit=0
     for i,va in enumerate(populrs):
         sumfit+= va.val
-        presumfit[i]=presumfit[i-1]+va.val
+        if i==0:
+            presumfit[i]=va.val
+        else:
+            presumfit[i]=presumfit[i-1]+va.val
     for i in range(100):
         father = randomselect()
         mother = randomselect()
