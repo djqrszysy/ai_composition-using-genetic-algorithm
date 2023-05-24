@@ -9,16 +9,17 @@ class musicpiece(object):
         self.val=0
 
 def reproduction(a,b):
+    ret=musicpiece()
     ret.pcs=np.append(a.pcs[0:16],b.pcs[16:32])
     ret.dely=np.append(a.dely[0:16],b.pcs[16:32])
     prob=random.random()
     if prob<=0.05:
-        pos=random.randint(0,32)
-        ret.pcs[pos]=random.randint(0,high=27)
-        ret.dely[pos] = random.randint(0,high=2)
+        pos=random.randint(0,31)
+        ret.pcs[pos]=random.randint(0,26)
+        ret.dely[pos] = random.randint(0,1)
     prob = random.random()
     return ret
-    
+
 
 
 harmy = [1.0,0.0,0.25,0.5,0.5,1.0,0.0,1.0,0.5,0.5,0.25,0.0]
@@ -33,13 +34,8 @@ def fitnes(piece1):
             sum=sum+1.0-harmy[dif]
     return sum/cnt
 
-def cmp(pc1,pc2):
-    if pc1.val>pc2.val:
-        return -1
-    elif pc1.val==pc2.val:
-        return 0
-    else:
-        return 1
+def cmp(pc1):
+    return pc1.val
 
 populrs = []
 presumfit = []
@@ -47,7 +43,7 @@ sumfit=0
 sumpopulrs=0
 
 def randomselect():
-    prob=random.randrange(0,sumfit)
+    prob=random.random()*sumfit
     l=0
     r=sumpopulrs-1
     ans=0
@@ -58,10 +54,11 @@ def randomselect():
             r=mid-1
         else :
             l=mid+1
-    return ans
+    return populrs[ans]
 
 
 for i in range(100):
+    prt1 = musicpiece()
     prt1.pcs=np.random.randint(0,high=27,size=32)
     prt1.dely=np.random.randint(0,high=2,size=32)
     prt1.val=fitnes(prt1)
@@ -69,7 +66,9 @@ for i in range(100):
     presumfit.append(0)
     sumpopulrs=sumpopulrs+1
 
-while true:
+
+Generations = 50
+for tms in range(Generations):
     newpopulrs = []
     sumfit=0
     for i,va in enumerate(populrs):
@@ -78,13 +77,17 @@ while true:
             presumfit[i]=va.val
         else:
             presumfit[i]=presumfit[i-1]+va.val
+    print(presumfit)
     for i in range(100):
         father = randomselect()
         mother = randomselect()
         newanm = reproduction(father,mother)
+        newanm.val=fitnes(newanm)
         newpopulrs.append(newanm)
 
-    populrs.append(newpopulrs)
-    sorted(populrs,lambda x,y : cmp(x,y))
-    for i in range(100):
-        populrs=np.delete(populrs,100)    
+    populrs = newpopulrs
+
+for i,va in enumerate(populrs):
+    print(va.val)
+    print(va.pcs)
+    print(va.dely)
